@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: <URL твоего git-репозитория>
+    repoURL: https://github.com/Akkumag/task-api-eks-gitops
     targetRevision: main
     path: gitops/manifests
   destination:
