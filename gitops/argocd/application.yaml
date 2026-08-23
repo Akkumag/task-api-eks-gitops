@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: task-api
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: <URL твоего git-репозитория>
+    targetRevision: main
+    path: gitops/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: task-api
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

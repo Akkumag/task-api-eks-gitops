@@ -1,0 +1,14 @@
+{
+  "name": "task-api",
+  "version": "1.0.0",
+  "description": "Small Task API — demo app for the EKS + ArgoCD + Prometheus/Grafana portfolio project",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "prom-client": "^15.1.3"
+  }
+}
