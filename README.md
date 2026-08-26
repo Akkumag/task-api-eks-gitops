@@ -85,7 +85,7 @@ Express API with an in-memory task store (not persistent — a deliberate tradeo
    ```bash
    kubectl set image deployment/task-api task-api=<account_id>.dkr.ecr.us-east-1.amazonaws.com/task-api:latest -n task-api
    ```
-   Thanks to the `ignoreDifferences` entry, ArgoCD won't revert this or flag it as drift on anything else — the Application will just show `OutOfSync` for this one field forever, which is expected.
+   Thanks to the `ignoreDifferences` entry, ArgoCD excludes this field from its live-vs-git comparison entirely — it won't revert the patch, and the Application should still show `Synced`/`Healthy` (verified across a full reconcile cycle), not `OutOfSync`. If it does show `OutOfSync` after `ignoreDifferences` has had time to take effect, that's a real problem, not expected behavior — try `argocd app get task-api --hard-refresh` (or wait one more reconcile cycle) before assuming something's broken.
 
 8. **Verify**
    ```bash
