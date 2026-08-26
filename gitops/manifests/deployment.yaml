@@ -17,7 +17,7 @@ spec:
     spec: 
       containers:
         - name: task-api
-          image: <ecr_repository_url>:latest
+          image: 428657999563.dkr.ecr.us-east-1.amazonaws.com/task-api:latest
           ports:
             - containerPort: 3000
           livenessProbe:
