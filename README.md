@@ -55,7 +55,7 @@ Express API with an in-memory task store (not persistent — a deliberate tradeo
    docker build --platform linux/amd64 -t <account_id>.dkr.ecr.us-east-1.amazonaws.com/task-api:latest app/
    docker push <account_id>.dkr.ecr.us-east-1.amazonaws.com/task-api:latest
    ```
-   `gitops/manifests/deployment.yaml` ships with `<AWS_ACCOUNT_ID>` as a placeholder in the `image:` field (deliberately — this repo is public, and an AWS account ID shouldn't sit in a public file unnecessarily). Replace it with your real account ID before committing and pushing, so ArgoCD deploys the right image.
+   `gitops/manifests/deployment.yaml` ships with `<AWS_ACCOUNT_ID>` as a placeholder in the `image:` field — deliberately, and it **stays that way in git**: this repo is public, and an AWS account ID shouldn't sit in a public file unnecessarily. `gitops/argocd/application.yaml` has an `ignoreDifferences` entry for exactly that field, so ArgoCD never tries to sync/revert it. That means the running `image:` is set directly on the cluster after ArgoCD deploys (see step 7) rather than through git — a new image version is rolled out with `kubectl set image`, not `git push`. That's the deliberate tradeoff for keeping the account ID out of the public repo.
 
 4. **Install ArgoCD into the cluster**
    ```bash
@@ -79,7 +79,15 @@ Express API with an in-memory task store (not persistent — a deliberate tradeo
    kubectl get applications -n argocd
    ```
 
-7. **Verify**
+7. **Point the Deployment at the real image**
+
+   The Deployment ArgoCD just created is still running the literal `<AWS_ACCOUNT_ID>...` placeholder (it'll fail to start — `InvalidImageName`, not just a bad pull). Patch it directly:
+   ```bash
+   kubectl set image deployment/task-api task-api=<account_id>.dkr.ecr.us-east-1.amazonaws.com/task-api:latest -n task-api
+   ```
+   Thanks to the `ignoreDifferences` entry, ArgoCD won't revert this or flag it as drift on anything else — the Application will just show `OutOfSync` for this one field forever, which is expected.
+
+8. **Verify**
    ```bash
    kubectl port-forward -n task-api svc/task-api 8080:80
    curl localhost:8080/healthz

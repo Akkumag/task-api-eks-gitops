@@ -12,6 +12,11 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: task-api
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/template/spec/containers/0/image
   syncPolicy:
     automated:
       prune: true
