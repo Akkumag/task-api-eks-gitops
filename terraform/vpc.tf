@@ -17,7 +17,7 @@ resource "aws_subnet" "public"  {
   map_public_ip_on_launch = true  
 
   tags = {
-    Name = "${var.vpc_name}-subnet" 
+    Name = "${var.vpc_name}-public-subnet-${count.index}" 
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
     "kubernetes.io/role/elb" = "1"
   }    
@@ -35,7 +35,7 @@ resource "aws_subnet" "private" {
   map_public_ip_on_launch = false
 
   tags = {
-    Name = "${var.vpc_name}-subnet"
+    Name = "${var.vpc_name}-private-subnet-${count.index}"
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
     "kubernetes.io/role/internal-elb" = "1"
   }
@@ -68,7 +68,7 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name = "${var.vpc_name}-rt"
+    Name = "${var.vpc_name}-public-rt"
   }
 }
 
@@ -80,7 +80,7 @@ resource "aws_route_table" "private" {
   }
 
   tags = {
-    Name = "${var.vpc_name}-rt"
+    Name = "${var.vpc_name}-private-rt"
   }
 }
 
