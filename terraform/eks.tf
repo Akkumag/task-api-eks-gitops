@@ -20,6 +20,7 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
 resource "aws_eks_cluster" "main" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_cluster_role.arn
+  version  = var.kubernetes_version
 
   vpc_config {
     subnet_ids = concat(aws_subnet.public[*].id, aws_subnet.private[*].id)
@@ -67,13 +68,15 @@ resource "aws_eks_node_group" "main" {
     aws_subnet.private[1].id
   ]
 
-  scaling_config {
-    desired_size = 3
-    min_size     = 1
-    max_size     = 3
-  }
+scaling_config {
+  desired_size = var.node_desired_size
+  min_size     = var.node_min_size
+  max_size     = var.node_max_size
+}
 
-  instance_types = ["t3.small"]
+  instance_types = [var.node_instance_type]
+  
+
 
   depends_on = [
     aws_iam_role_policy_attachment.eks_worker_node_policy,

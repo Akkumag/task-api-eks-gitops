@@ -33,19 +33,19 @@ variable "vpc_name" {
 variable "kubernetes_version" {
   description = "Kubernetes version for the EKS cluster"
   type        = string
-  default     = "1.27"
+  default     = "1.36"
 }
 
 variable "node_instance_type" {
   description = "EC2 instance type for EKS worker nodes"
   type        = string
-  default     = "t3.medium"
+  default     = "t3.small"
 }
 
 variable "node_desired_size" {
   description = "Desired number of worker nodes in the EKS node group"
   type        = number
-  default     = 2  
+  default     = 3  
 }
 
 variable "node_min_size" {
