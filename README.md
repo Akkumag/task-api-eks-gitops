@@ -46,7 +46,7 @@ Express API with an in-memory task store (not persistent — a deliberate tradeo
 
 2. **Point kubectl at the new cluster**
    ```bash
-   aws eks update-kubeconfig --region us-east-1 --name kind
+   aws eks update-kubeconfig --region us-east-1 --name task-api-cluster
    ```
 
 3. **Build and push the image** (note `--platform linux/amd64` — required if you're building on Apple Silicon; EKS nodes are amd64)
@@ -55,7 +55,7 @@ Express API with an in-memory task store (not persistent — a deliberate tradeo
    docker build --platform linux/amd64 -t <account_id>.dkr.ecr.us-east-1.amazonaws.com/task-api:latest app/
    docker push <account_id>.dkr.ecr.us-east-1.amazonaws.com/task-api:latest
    ```
-   Update the `image:` field in `gitops/manifests/deployment.yaml` to match, then commit and push.
+   `gitops/manifests/deployment.yaml` ships with `<AWS_ACCOUNT_ID>` as a placeholder in the `image:` field (deliberately — this repo is public, and an AWS account ID shouldn't sit in a public file unnecessarily). Replace it with your real account ID before committing and pushing, so ArgoCD deploys the right image.
 
 4. **Install ArgoCD into the cluster**
    ```bash

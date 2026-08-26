@@ -4,5 +4,6 @@ node_modules/
 *.tfstate
 *.tfstate.*
 *.tfvars
+*.tfplan
 tfplan
 .DS_Store
