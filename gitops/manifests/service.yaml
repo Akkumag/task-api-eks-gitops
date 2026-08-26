@@ -3,10 +3,12 @@ kind: Service
 metadata:
   name: task-api
   namespace: task-api
+  labels:
+    app: task-api
 spec:
   selector:
     app: task-api
   ports:
-    - port: 80
+    - name: http
+      port: 80
       targetPort: 3000
-  type: ClusterIP
